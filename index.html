@@ -1,0 +1,468 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style></head><body>
+<title>План открытия PECÀN</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&family=Lobster&display=swap">
+<style id="css">
+/* Layout: brand band on top, summary strip, then one working surface (Gantt / вехи / роли) switched by tabs. */
+:root{
+  --bg:#FAF6EB; --surface:#FFFDF7; --ink:#3A1019; --muted:#8A6A6F; --line:#EADFC6;
+  --accent:#862837; --band:#862837; --band-ink:#F7DC9F; --cream:#F7DC9F; --sky:#C6D8E2; --tint:#F3E9D2;
+  --late:#B3261E; --ok:#3E7D55;
+  --r-gu:#862837; --r-client:#4F86A6; --r-design:#D59A2A; --r-build:#6E5A52; --r-supply:#5E8C6A; --r-chef:#C4607A;
+  --display:"Lobster","Century Gothic",cursive;
+  --body:"Century Gothic","Jost","Avenir Next",system-ui,sans-serif;
+  --nw:300px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#22080E; --surface:#2F0E17; --ink:#FAF6EB; --muted:#CDAEAB; --line:#532331;
+  --accent:#F7DC9F; --band:#5C1826; --band-ink:#F7DC9F; --cream:#F7DC9F; --sky:#C6D8E2; --tint:#3A141E;
+  --late:#FF8A80; --ok:#8FD0A4;
+  --r-gu:#E0707F; --r-client:#9CC3DA; --r-design:#F7DC9F; --r-build:#B9A59D; --r-supply:#8FC09B; --r-chef:#F0A3B8;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#22080E; --surface:#2F0E17; --ink:#FAF6EB; --muted:#CDAEAB; --line:#532331;
+  --accent:#F7DC9F; --band:#5C1826; --band-ink:#F7DC9F; --cream:#F7DC9F; --sky:#C6D8E2; --tint:#3A141E;
+  --late:#FF8A80; --ok:#8FD0A4;
+  --r-gu:#E0707F; --r-client:#9CC3DA; --r-design:#F7DC9F; --r-build:#B9A59D; --r-supply:#8FC09B; --r-chef:#F0A3B8;
+  color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--body);font-variant-numeric:tabular-nums}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.band{background:var(--band);color:var(--band-ink);padding-block:22px 20px;padding-inline:max(16px,calc((100% - 1280px)/2))}
+.band-row{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:flex-end;justify-content:space-between}
+.mark{font:400 44px/1 var(--display);letter-spacing:.01em}
+.mark small{display:block;font:400 12px/1 var(--body);letter-spacing:.32em;text-transform:lowercase;margin-top:6px;opacity:.85}
+.band h1{margin:0;font:400 19px/1.25 var(--body);text-wrap:balance}
+.band p{margin:4px 0 0;font-size:13px;opacity:.85}
+.wrap{padding-block:20px 90px;padding-inline:max(16px,calc((100% - 1280px)/2));display:flex;flex-direction:column;gap:20px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.stat{background:var(--surface);padding:14px 16px;min-width:0}
+.stat b{display:block;font:400 34px/1.05 var(--display);color:var(--accent)}
+.stat span{display:block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.stat em{font-style:normal;font-size:13px;color:var(--muted)}
+.meter{height:6px;border-radius:3px;background:var(--tint);margin-top:8px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--accent)}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.duo section{min-width:0}
+h2{font:700 12px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.list{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.item{display:grid;grid-template-columns:92px 1fr;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);background:none;border-inline:0;border-top:0;text-align:left;align-items:baseline}
+.item:hover .t{text-decoration:underline}
+.item .when{font-size:13px;color:var(--muted);white-space:nowrap}
+.item .t{min-width:0}
+.empty{color:var(--muted);font-size:14px;padding:10px 0}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap;color:var(--muted)}
+.chip::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--rc);flex:none}
+.tag{display:inline-block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;padding:1px 6px;border-radius:4px;border:1px solid currentColor;margin-left:6px;vertical-align:1px}
+.tag.late{color:var(--late)} .tag.done{color:var(--ok)} .tag.crit{color:var(--accent)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font-weight:500;color:var(--muted)}
+.tabs button[aria-selected="true"]{color:var(--accent);border-color:var(--accent)}
+.tools{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.pill{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;display:inline-flex;gap:7px;align-items:center}
+.pill::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--rc,transparent);display:var(--dot,none)}
+.pill.role{--dot:block}
+.pill[aria-pressed="true"]{border-color:var(--accent);background:var(--tint);font-weight:500}
+.pill.off{opacity:.45}
+.tools select{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px}
+.btn{background:var(--accent);color:var(--bg);border:0;border-radius:999px;padding:8px 16px;font-weight:500}
+.btn.ghost{background:none;color:var(--accent);border:1px solid var(--accent)}
+.btn.danger{background:none;color:var(--late);border:1px solid var(--late)}
+.spacer{flex:1}
+.gwrap{overflow:auto;max-height:78vh;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.ginner{position:relative;width:max-content;min-width:100%}
+.ghead{position:sticky;top:0;z-index:5;display:flex;background:var(--surface);border-bottom:1px solid var(--line)}
+.corner{position:sticky;left:0;z-index:6;width:var(--nw);flex:none;background:var(--surface);border-right:1px solid var(--line);display:flex;align-items:flex-end;padding:8px 12px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.scale{position:relative;flex:none;height:64px}
+.scale div{position:absolute;white-space:nowrap;overflow:hidden}
+.scale .mo{top:0;height:24px;line-height:24px;padding-left:6px;font-weight:700;font-size:13px;border-left:1px solid var(--line)}
+.scale .wk{top:24px;height:20px;line-height:20px;padding-left:3px;font-size:11px;color:var(--muted);border-left:1px solid var(--line)}
+.scale .ev{top:45px;height:17px;line-height:17px;font-size:10.5px;padding:0 5px;border-radius:3px;background:var(--sky);color:#2b3b45}
+.scale .now{top:45px;height:17px;line-height:17px;font-size:10.5px;padding:0 5px;border-radius:3px;background:var(--accent);color:var(--bg);z-index:2;font-weight:700}
+.grow{display:flex;border-bottom:1px solid var(--line);min-height:42px}
+.grow:hover .gname,.grow:hover .gtrack{background-color:var(--tint)}
+.gname{position:sticky;left:0;z-index:3;width:var(--nw);flex:none;background:var(--surface);border:0;border-right:1px solid var(--line);padding:6px 12px;text-align:left;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:0}
+.gname .n{font-size:14px;line-height:1.25;overflow-wrap:anywhere}
+.gname .n.done{color:var(--muted)}
+.gtrack{position:relative;flex:none;background-image:linear-gradient(to right,var(--line) 1px,transparent 1px);background-size:var(--ww) 100%}
+.phase .gname{background:var(--tint);font-weight:700;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:2px 8px}
+.scale .ev{text-overflow:ellipsis}
+.dl{font-size:14px;color:var(--muted);margin:0}.dl a{color:var(--accent);font-weight:500}
+.phase .gname .n{font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.phase .gname .pc{font-size:12px;color:var(--muted);font-weight:400;white-space:nowrap}
+.phase .gtrack{background-color:var(--tint)}
+.pbar{position:absolute;top:50%;height:6px;margin-top:-3px;border-radius:3px;background:color-mix(in srgb,var(--accent) 28%,transparent);overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--accent)}
+.bar{position:absolute;top:50%;height:20px;margin-top:-10px;border-radius:6px;background:color-mix(in srgb,var(--rc) 26%,transparent);border:1px solid var(--rc);overflow:hidden;z-index:2;padding:0;min-width:4px}
+.bar i{display:block;height:100%;background:var(--rc)}
+.bar.late{border-color:var(--late);border-width:2px}
+.ms{position:absolute;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;transform:rotate(45deg);background:var(--rc);border:2px solid var(--surface);border-radius:3px;z-index:2;padding:0}
+.ms.open{background:var(--surface);border-color:var(--rc)}
+.lbl{position:absolute;top:50%;transform:translateY(-50%);font-size:11.5px;color:var(--muted);white-space:nowrap;z-index:2;pointer-events:none}
+.gover{position:absolute;top:0;bottom:0;pointer-events:none;z-index:1}
+.gover .band2{position:absolute;top:64px;bottom:0;background:color-mix(in srgb,var(--sky) 22%,transparent)}
+.gover .today{position:absolute;top:45px;bottom:0;width:2px;background:var(--accent)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--rc);border-radius:12px;padding:16px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.card h3{margin:0;font:400 24px/1.1 var(--display);color:var(--ink)}
+.card .who{font-size:13px;color:var(--muted)}
+.card ul{margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:4px}
+.card .num{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.mtable{width:100%;border-collapse:collapse;font-size:14px}
+.mtable th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;font-weight:700;padding:8px 10px;border-bottom:1px solid var(--line)}
+.mtable td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.mtable tr.past td{color:var(--muted)}
+.mtable td:first-child{white-space:nowrap}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+.notes{display:flex;flex-direction:column;gap:8px;margin:0;padding-left:18px;max-width:75ch;font-size:14px}
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);padding:0;width:min(560px,calc(100% - 24px));max-height:90vh}
+dialog::backdrop{background:rgba(40,8,16,.55)}
+.dlg{padding:20px;display:flex;flex-direction:column;gap:12px}
+.dlg h3{margin:0;font:400 24px/1.15 var(--display);text-wrap:balance}
+.dlg label{display:flex;flex-direction:column;gap:4px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:0}
+.dlg input,.dlg select,.dlg textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:15px;letter-spacing:0;text-transform:none;color:var(--ink);width:100%}
+.dlg input[type=checkbox]{width:auto}
+.dlg input[type=range]{padding:0}
+.dlg .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dlg .checks{display:flex;flex-wrap:wrap;gap:6px 18px}
+.dlg .checks label{flex-direction:row;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink)}
+.dlg .shift{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:13px;color:var(--muted)}
+.dlg .shift button{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:4px 10px}
+.dlg .acts{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:4px}
+.dlg dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14px}
+.dlg dt{color:var(--muted)} .dlg dd{margin:0}
+.savebar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--band);color:var(--band-ink);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center}
+.savebar .btn{background:var(--cream);color:#5C1826}
+.savebar .btn.ghost{background:none;color:var(--band-ink);border-color:var(--band-ink)}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);z-index:30;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;max-width:min(520px,calc(100% - 32px));font-size:14px}
+@media (max-width:640px){:root{--nw:150px}.mark{font-size:36px}.gname .chip{display:none}.gname{padding:6px 8px}.gname .n{font-size:13px}.item{grid-template-columns:78px 1fr}.dlg .two{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:no-preference){.bar i,.meter i{transition:width .3s}}
+</style>
+<div id="app"></div>
+<script type="application/json" id="plan">{"updated":"2026-10-04","range":["2026-09-14","2027-03-28"],"soft":"t112","grand":"t115","roles":[{"k":"gu","n":"Gastro Ultima","who":"Консалтинг и управление проектом","duties":["Ведёт проект целиком: график, контрольные точки, отчётность","Аналитика локации, финансовая модель, маркетинговая стратегия","Технологический проект (ТХ), инженерные ТЗ, технологический надзор","Спецификации оснащения и выездная сессия в Китае","Подбор команды, обучение, аттестация","iiko, лояльность, стандарты, ХАССП, сопровождение открытия"]},{"k":"client","n":"Заказчик","who":"Инвестор и владелец","duties":["Согласует материалы в течение 3 рабочих дней","Регистрирует ТОО, открывает счёт, заключает договоры","Оплачивает строителей, дизайн, оборудование, логистику и таможню","Финансирует рекламу, вывеску, полиграфию, упаковку","Закупает первый товарный запас и расходники"]},{"k":"design","n":"Дизайн-студия","who":"Новый подрядчик · выбираем до 16 октября","duties":["Планировочное решение и концепция интерьера","3D-визуализации, сверка с технологическим зонированием","Рабочие чертежи, ведомости отделки, мебели и света, смета","Авторский надзор за отделкой и декором","Эскиз фасадной вывески"]},{"k":"build","n":"Строители","who":"Новая бригада · выбираем до 30 октября","duties":["Черновые работы и перегородки по проекту","Электрика 380 В, вода, канализация, трапы, жироуловитель","Вентиляция и кондиционирование","Чистовая отделка, свет, сантехника","Сдача помещения по акту строительной готовности"]},{"k":"supply","n":"Поставщики и логистика","who":"Фабрики КНР, европейские линии, карго, таможня","duties":["Производство мебели, света, посуды, нейтрального оборудования","Поставка печей, расстойки, кофемашины","Отгрузка до Китайского Нового года","Доставка, таможенное оформление, разгрузка на объекте"]},{"k":"chef","n":"Шефы и команда","who":"Шеф-пекарь, шеф-бариста, управляющий, линейный персонал","duties":["Рецептуры и технологические карты","Проработки и дегустации меню","Обучение в Академии PECÀN и аттестация","Работа смен в тестовом режиме и на открытии"]}],"phases":[{"k":"p0","n":"Старт проекта"},{"k":"p1","n":"Аналитика и стратегия"},{"k":"p2","n":"Технологический проект"},{"k":"p3","n":"Дизайн-проект"},{"k":"p4","n":"Строительство и отделка"},{"k":"p5","n":"Комплектация и Китай"},{"k":"p6","n":"Команда"},{"k":"p7","n":"Меню и продукт"},{"k":"p8","n":"Автоматизация и IT"},{"k":"p9","n":"Стандарты и обучение"},{"k":"p10","n":"Маркетинг запуска"},{"k":"p11","n":"Запуск"}],"marks":[{"n":"День Независимости","s":"2026-12-16","e":"2026-12-16"},{"n":"Новый год","s":"2026-12-31","e":"2027-01-03"},{"n":"Китайский Новый год: фабрики закрыты (ориент.)","s":"2027-01-28","e":"2027-02-17"},{"n":"8 Марта","s":"2027-03-08","e":"2027-03-08"},{"n":"Наурыз","s":"2027-03-21","e":"2027-03-23"}],"notes":["Проектная документация дизайна готова полностью до выезда в Китай: по ней собираются закупочные спецификации.","Фабричные заказы отгружаются до Китайского Нового года (6 февраля 2027). Опоздание сдвигает открытие на 3–4 недели.","Сроки доставки и таможни зависят от перевозчика и терминалов на границе. После прибытия груза на монтаж и пусконаладку нужно до 14 дней.","Заказчик согласует материалы за 3 рабочих дня. Каждый день задержки согласования сдвигает зависимые работы.","Торжественное открытие назначено на субботу после Ораза айта и до Наурыза. Дату уточняем в январе."],"tasks":[
+{"i":"t1","p":"p0","n":"Бриф, обмерный план, айдентика и брендбук переданы","r":"client","s":"2026-09-16","e":"2026-09-17","g":100},
+{"i":"t2","p":"p0","n":"Договор подписан","r":"gu","s":"2026-09-27","e":"2026-09-27","g":100,"m":1,"w":"Заказчик"},
+{"i":"t5","p":"p0","n":"Календарный план проекта","r":"gu","s":"2026-09-28","e":"2026-10-05","g":90,"d":"Перечень работ, сроки, контрольные точки и зоны ответственности. Дальше отчитываемся по нему."},
+{"i":"t8","p":"p0","n":"Регистрация ТОО, расчётный счёт, ОКЭД 56101","r":"client","s":"2026-10-19","e":"2026-10-30","g":0,"d":"Два учредителя. Упрощённая декларация выбирается сразу при регистрации. Юрлицо нужно для договоров с ЖКХ и поставщиками. После регистрации прислать реквизиты."},
+
+{"i":"t10","p":"p1","n":"Замер пешеходного и автомобильного трафика","r":"gu","s":"2026-09-28","e":"2026-10-11","g":10,"d":"Хронометраж по пр. Тұран: утро 07:30–09:30, обед 12:30–14:30, вечер 17:30–20:00, выходные. Расчёт конверсии в чеки."},
+{"i":"t11","p":"p1","n":"Анализ конкурентов района Туран","r":"gu","s":"2026-09-28","e":"2026-10-09","g":10,"d":"Меню, средние чеки, загрузка заведений, пешеходные связи ЖК, парковки."},
+{"i":"t12","p":"p1","n":"Финансовая модель: CAPEX, OPEX, P&L, Cash Flow","r":"gu","s":"2026-10-05","e":"2026-10-18","g":0,"d":"Точка безубыточности и срок окупаемости. Результат: модель в Excel и инвестиционный бюджет."},
+{"i":"t13","p":"p1","n":"Маркетинговая стратегия и ассортиментная матрица","r":"gu","s":"2026-10-05","e":"2026-10-23","g":0},
+{"i":"t14","p":"p1","n":"Защита финмодели и бюджета","r":"gu","s":"2026-10-20","e":"2026-10-20","g":0,"m":1,"w":"Заказчик"},
+
+{"i":"t20","p":"p2","n":"Технологическое зонирование: варианты планировки","r":"gu","s":"2026-09-28","e":"2026-10-09","g":20,"c":1,"d":"Зал на 20–25 мест, бар и витрина, пекарня, заготовочная, мойка, склад, санузлы. Оценка антресоли при высоте 4,52 м."},
+{"i":"t21","p":"p2","n":"Зонирование согласовано","r":"client","s":"2026-10-14","e":"2026-10-14","g":0,"m":1,"c":1},
+{"i":"t22","p":"p2","n":"Проект ТХ: комплект чертежей по СанПиН и ХАССП","r":"gu","s":"2026-10-12","e":"2026-10-30","g":0,"c":1},
+{"i":"t23","p":"p2","n":"Инженерные ТЗ: электрика 380 В, вода, канализация, вентиляция","r":"gu","s":"2026-10-19","e":"2026-10-30","g":0},
+{"i":"t24","p":"p2","n":"Раздел ТХ и инженерные ТЗ сданы","r":"gu","s":"2026-11-02","e":"2026-11-02","g":0,"m":1},
+
+{"i":"t28","p":"p3","n":"Поиск нового дизайн-подрядчика: портфолио, предложения, выбор","r":"gu","s":"2026-10-05","e":"2026-10-16","g":0,"c":1,"w":"Заказчик","d":"Ищем с нуля. Отбор студий с опытом в кофейнях и пекарнях, сравнение сроков и стоимости, выбор вместе с заказчиком. Авторский надзор включаем в договор сразу."},
+{"i":"t29","p":"p3","n":"Договор с дизайн-студией подписан","r":"client","s":"2026-10-16","e":"2026-10-16","g":0,"m":1,"c":1},
+{"i":"t30","p":"p3","n":"Концепция интерьера и планировочное решение","r":"design","s":"2026-10-19","e":"2026-10-30","g":0,"c":1,"d":"Референсы от заказчика, стилистика по брендбуку, технологическое зонирование от Gastro Ultima."},
+{"i":"t31","p":"p3","n":"3D-визуализации интерьера","r":"design","s":"2026-10-26","e":"2026-11-06","g":0,"c":1},
+{"i":"t32","p":"p3","n":"Сверка визуализаций с технологическим зонированием","r":"gu","s":"2026-11-02","e":"2026-11-06","g":0,"w":"Дизайн-студия"},
+{"i":"t33","p":"p3","n":"Рабочая документация: чертежи, ведомости, смета","r":"design","s":"2026-11-02","e":"2026-11-20","g":0,"c":1,"x":1,"d":"Рабочие чертежи, ведомости отделки, мебели и освещения, проектная смета. Срок сжатый: пять недель от договора до полного комплекта."},
+{"i":"t34","p":"p3","n":"Дизайн-проект готов полностью","r":"design","s":"2026-11-20","e":"2026-11-20","g":0,"m":1,"c":1},
+{"i":"t35","p":"p3","n":"Вывеска: эскиз, согласование, изготовление, монтаж","r":"client","s":"2026-11-09","e":"2027-01-22","g":0,"w":"Дизайн-студия"},
+{"i":"t36","p":"p3","n":"Авторский надзор дизайнера: выезды на объект, контроль отделки","r":"design","s":"2026-11-02","e":"2027-02-09","g":0,"w":"Строители","d":"Регулярные выезды на объект с выхода строителей до расстановки мебели. Проверка соответствия проекту, согласование замен материалов, ответы на вопросы бригады. Входит в договор с дизайн-студией."},
+{"i":"t37","p":"p3","n":"Интерьер принят дизайнером по проекту","r":"design","s":"2027-02-09","e":"2027-02-09","g":0,"m":1,"w":"Заказчик, Gastro Ultima"},
+
+{"i":"t40","p":"p4","n":"Поиск строительной бригады: кандидаты, объекты, отзывы","r":"gu","s":"2026-10-05","e":"2026-10-16","g":0,"c":1,"w":"Заказчик","d":"Ищем с нуля. Отбор бригад с опытом в общепите: электрика 380 В, вентиляция, мокрые зоны. Выезд на их сданные объекты."},
+{"i":"t38","p":"p4","n":"Сметы от бригад и сравнение предложений","r":"gu","s":"2026-10-19","e":"2026-10-28","g":0,"c":1,"w":"Заказчик","d":"Сметы считаются по технологическому зонированию и инженерным ТЗ, уточняются после рабочей документации дизайна."},
+{"i":"t39","p":"p4","n":"Договор подряда подписан","r":"client","s":"2026-10-30","e":"2026-10-30","g":0,"m":1,"c":1,"w":"Строители","d":"В договоре: сроки по этому графику, поэтапная оплата, закупка материалов по проектной смете."},
+{"i":"t41","p":"p4","n":"Строители вышли на объект","r":"build","s":"2026-11-02","e":"2026-11-02","g":0,"m":1},
+{"i":"t42","p":"p4","n":"Черновые работы и перегородки","r":"build","s":"2026-11-02","e":"2026-11-20","g":0},
+{"i":"t43","p":"p4","n":"Электрика, вода, канализация, трапы, жироуловитель","r":"build","s":"2026-11-09","e":"2026-12-04","g":0},
+{"i":"t44","p":"p4","n":"Вентиляция и кондиционирование","r":"build","s":"2026-11-16","e":"2026-12-11","g":0},
+{"i":"t45","p":"p4","n":"Технологический надзор за выводами коммуникаций","r":"gu","s":"2026-11-09","e":"2026-12-11","g":0,"d":"Акты осмотра до закрытия стен и начала чистовой отделки."},
+{"i":"t46","p":"p4","n":"Чистовая отделка","r":"build","s":"2026-12-07","e":"2027-01-15","g":0},
+{"i":"t47","p":"p4","n":"Свет, сантехника, столярные изделия","r":"build","s":"2027-01-04","e":"2027-01-22","g":0},
+{"i":"t48","p":"p4","n":"Приёмка строительной готовности","r":"gu","s":"2027-01-25","e":"2027-01-25","g":0,"m":1,"w":"Заказчик, строители"},
+{"i":"t49","p":"p4","n":"Генеральная уборка после ремонта","r":"build","s":"2027-01-25","e":"2027-01-27","g":0},
+
+{"i":"t50","p":"p5","n":"Спецификации технологического оборудования и инвентаря","r":"gu","s":"2026-10-26","e":"2026-11-13","g":0,"c":1,"d":"Собираются по проекту ТХ: печи, расстойка, холод, бар, нейтральное оборудование."},
+{"i":"t64","p":"p5","n":"Спецификации мебели, света и посуды по дизайн-проекту","r":"gu","s":"2026-11-09","e":"2026-11-20","g":0,"c":1,"w":"Дизайн-студия","d":"Собираются по ведомостям мебели и освещения из рабочей документации дизайна."},
+{"i":"t51","p":"p5","n":"Спецификации и бюджет закупок утверждены","r":"client","s":"2026-11-20","e":"2026-11-20","g":0,"m":1,"c":1},
+{"i":"t53","p":"p5","n":"Подготовка поездки: маршрут фабрик, визы, билеты","r":"gu","s":"2026-11-02","e":"2026-11-20","g":0,"w":"Заказчик"},
+{"i":"t54","p":"p5","n":"Выездная сессия в Китае: Гуанчжоу, Фошань","r":"gu","s":"2026-11-23","e":"2026-11-29","g":0,"c":1,"w":"Заказчик","d":"Отбор посуды, мебели, света, декора и оборудования на фабриках, согласование цен."},
+{"i":"t55","p":"p5","n":"Размещение заказов и предоплата фабрикам","r":"client","s":"2026-11-30","e":"2026-12-04","g":0,"c":1,"w":"Gastro Ultima"},
+{"i":"t56","p":"p5","n":"Заказ печей, расстойки, кофемашины","r":"client","s":"2026-11-30","e":"2026-12-11","g":0,"w":"Gastro Ultima"},
+{"i":"t57","p":"p5","n":"Производство на фабриках","r":"supply","s":"2026-12-07","e":"2027-01-08","g":0,"c":1},
+{"i":"t58","p":"p5","n":"Контроль качества и отгрузка из Китая","r":"supply","s":"2027-01-04","e":"2027-01-13","g":0,"c":1,"x":1,"d":"Отгрузка с запасом до закрытия фабрик на Китайский Новый год."},
+{"i":"t59","p":"p5","n":"Доставка и таможенное оформление","r":"supply","s":"2027-01-13","e":"2027-01-29","g":0,"c":1,"x":1},
+{"i":"t60","p":"p5","n":"Оборудование и мебель на объекте","r":"supply","s":"2027-01-29","e":"2027-01-29","g":0,"m":1,"c":1},
+{"i":"t62","p":"p5","n":"Монтаж оборудования, пусконаладка","r":"supply","s":"2027-02-01","e":"2027-02-07","g":0,"c":1,"w":"Gastro Ultima: шеф-контроль"},
+{"i":"t63","p":"p5","n":"Расстановка мебели, свет, декор","r":"design","s":"2027-02-03","e":"2027-02-09","g":0},
+
+{"i":"t70","p":"p6","n":"Штатное расписание, фонд оплаты труда, KPI","r":"gu","s":"2026-11-02","e":"2026-11-13","g":0},
+{"i":"t71","p":"p6","n":"Поиск управляющего","r":"gu","s":"2026-11-16","e":"2026-12-18","g":0},
+{"i":"t72","p":"p6","n":"Подбор шеф-пекаря и шеф-бариста","r":"gu","s":"2026-11-16","e":"2026-12-11","g":0,"w":"Заказчик: договор и гонорар"},
+{"i":"t73","p":"p6","n":"Подбор линейного персонала","r":"gu","s":"2027-01-04","e":"2027-01-29","g":0,"d":"Бариста, пекари, повара, кассиры, зал, клининг."},
+{"i":"t74","p":"p6","n":"Штат укомплектован: 10–14 человек","r":"gu","s":"2027-01-29","e":"2027-01-29","g":0,"m":1},
+{"i":"t75","p":"p6","n":"Оформление сотрудников и медицинские книжки","r":"client","s":"2027-01-25","e":"2027-02-05","g":0},
+
+{"i":"t80","p":"p7","n":"Концепция меню","r":"gu","s":"2026-11-09","e":"2026-11-27","g":0,"w":"Шефы"},
+{"i":"t81","p":"p7","n":"Рецептуры и технологические карты","r":"chef","s":"2026-12-07","e":"2027-01-22","g":0},
+{"i":"t82","p":"p7","n":"Поставщики сырья: отбор и договоры","r":"gu","s":"2027-01-11","e":"2027-02-05","g":0,"w":"Заказчик"},
+{"i":"t83","p":"p7","n":"Упаковка, печать меню, форма персонала","r":"client","s":"2027-01-04","e":"2027-02-05","g":0,"d":"По брендбуку. Дизайн стаканов и крафтовых пакетов обновляется."},
+{"i":"t84","p":"p7","n":"Проработки и дегустации на объекте","r":"chef","s":"2027-02-08","e":"2027-02-13","g":0,"w":"Заказчик, Gastro Ultima"},
+
+{"i":"t90","p":"p8","n":"Закупка касс, принтеров, лицензий iiko","r":"client","s":"2027-01-11","e":"2027-01-22","g":0},
+{"i":"t91","p":"p8","n":"Настройка iiko: номенклатура, склады, техкарты","r":"gu","s":"2027-01-25","e":"2027-02-12","g":0},
+{"i":"t92","p":"p8","n":"Kaspi Pay, Webkassa, кассовая зона","r":"gu","s":"2027-02-01","e":"2027-02-12","g":0},
+{"i":"t93","p":"p8","n":"Бонусная программа лояльности","r":"gu","s":"2027-02-01","e":"2027-02-12","g":0},
+{"i":"t94","p":"p8","n":"Заявки в Wolt, Yandex Eats, Glovo, Choco","r":"gu","s":"2027-02-08","e":"2027-02-26","g":0,"d":"Решение о подключении принимают агрегаторы."},
+{"i":"t95","p":"p8","n":"Дашборд для владельцев","r":"gu","s":"2027-02-08","e":"2027-02-19","g":0},
+
+{"i":"t100","p":"p9","n":"Service Book, должностные инструкции, чек-листы, ХАССП","r":"gu","s":"2026-11-16","e":"2026-12-18","g":0},
+{"i":"t101","p":"p9","n":"Договоры ЖКХ, вывоз отходов, уведомление о начале деятельности","r":"client","s":"2027-01-25","e":"2027-02-12","g":0,"w":"Gastro Ultima"},
+{"i":"t102","p":"p9","n":"Обучение управляющего","r":"gu","s":"2027-01-25","e":"2027-02-05","g":0},
+{"i":"t103","p":"p9","n":"Академия PECÀN: бариста, пекарня, кухня, сервис","r":"gu","s":"2027-02-08","e":"2027-02-13","g":0,"c":1,"w":"Команда"},
+{"i":"t104","p":"p9","n":"Аттестация команды","r":"gu","s":"2027-02-13","e":"2027-02-13","g":0,"m":1,"c":1},
+
+{"i":"t105","p":"p10","n":"Медиаплан запуска","r":"gu","s":"2026-10-26","e":"2026-11-13","g":0},
+{"i":"t106","p":"p10","n":"Instagram: прогрев до открытия","r":"client","s":"2027-01-04","e":"2027-03-13","g":0,"w":"Gastro Ultima: медиаплан и ТЗ"},
+{"i":"t107","p":"p10","n":"Карточки в 2ГИС, Яндекс и Google","r":"gu","s":"2027-02-01","e":"2027-02-12","g":0},
+{"i":"t108","p":"p10","n":"Подготовка торжественного открытия","r":"gu","s":"2027-02-15","e":"2027-03-12","g":0,"w":"Заказчик: блогеры, подарочный фонд"},
+
+{"i":"t110","p":"p11","n":"Первый закуп продуктов и расходников","r":"client","s":"2027-02-10","e":"2027-02-14","g":0},
+{"i":"t112","p":"p11","n":"Техническое открытие","r":"gu","s":"2027-02-15","e":"2027-02-15","g":0,"m":1,"c":1,"w":"Все участники"},
+{"i":"t113","p":"p11","n":"Тестовая эксплуатация, 10 дней","r":"gu","s":"2027-02-15","e":"2027-02-24","g":0,"c":1,"w":"Команда","d":"Закрытая фокус-группа, калибровка скорости отдачи на пиковой нагрузке."},
+{"i":"t114","p":"p11","n":"Работа в мягком режиме, доводка процессов","r":"chef","s":"2027-02-25","e":"2027-03-12","g":0,"w":"Gastro Ultima"},
+{"i":"t115","p":"p11","n":"Торжественное открытие","r":"gu","s":"2027-03-13","e":"2027-03-13","g":0,"m":1,"c":1,"w":"Все участники"},
+{"i":"t117","p":"p11","n":"Итоговый аудит и акт, передача кофейни владельцам","r":"gu","s":"2027-03-15","e":"2027-03-19","g":0}
+]}</script>
+<script id="js">
+(function(){
+var MON=['янв','фев','мар','апр','мая','июн','июл','авг','сен','окт','ноя','дек'];
+var MONF=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+var RAW=document.getElementById('plan').textContent;
+var S=JSON.parse(RAW);
+var app=document.getElementById('app');
+var art=null,canEdit=false,dirty=false,busy=false,toastT=null,firstScroll=true;
+var F={roles:{},mode:'all',closed:{},zoom:9,tab:'gantt'};
+try{var z=+localStorage.getItem('pecan-zoom');if(z)F.zoom=z}catch(e){}
+var h=(location.hash||'').slice(1);if(h==='roles'||h==='milestones'||h==='gantt')F.tab=h;
+
+function dn(s){return Math.round(Date.parse(s+'T00:00:00Z')/864e5)}
+function iso(n){return new Date(n*864e5).toISOString().slice(0,10)}
+var now=new Date();
+var TODAY=now.getFullYear()+'-'+('0'+(now.getMonth()+1)).slice(-2)+'-'+('0'+now.getDate()).slice(-2);
+var T=dn(TODAY);
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function fd(s,y){var p=s.split('-');return +p[2]+' '+MON[+p[1]-1]+(y?' '+p[0]:'')}
+function fr(t){if(t.s===t.e)return fd(t.s);var a=t.s.split('-'),b=t.e.split('-');return a[1]===b[1]?+a[2]+'–'+fd(t.e):fd(t.s)+' – '+fd(t.e)}
+function role(k){for(var i=0;i<S.roles.length;i++)if(S.roles[i].k===k)return S.roles[i];return S.roles[0]}
+function task(id){for(var i=0;i<S.tasks.length;i++)if(S.tasks[i].i===id)return S.tasks[i];return null}
+function st(t){return t.g>=100?'done':dn(t.e)<T?'late':dn(t.s)<=T?'now':'plan'}
+var STN={done:'Готово',late:'Просрочено',now:'В работе',plan:'В плане'};
+function plural(n,a,b,c){n=Math.abs(n);var m=n%100,k=n%10;return m>10&&m<20?c:k===1?a:k>1&&k<5?b:c}
+function days(n){return n+' '+plural(n,'день','дня','дней')}
+function prog(list){var w=0,g=0;list.forEach(function(t){var d=t.m?1:dn(t.e)-dn(t.s)+1;w+=d;g+=d*t.g});return w?Math.round(g/w):0}
+function visible(t){
+  var any=Object.keys(F.roles).length;
+  if(any&&!F.roles[t.r])return false;
+  var s=st(t);
+  if(F.mode==='open')return s!=='done';
+  if(F.mode==='now')return s==='now'||s==='late';
+  if(F.mode==='late')return s==='late';
+  if(F.mode==='ms')return !!t.m;
+  if(F.mode==='crit')return !!t.c;
+  if(F.mode==='14')return s!=='done'&&dn(t.s)<=T+14&&dn(t.e)>=T;
+  return true}
+function tags(t){var s=st(t),o='';
+  if(s==='late')o+='<span class="tag late">просрочено</span>';
+  if(t.x&&s!=='done')o+='<span class="tag late">риск</span>';
+  return o}
+
+function head(){
+  var soft=task(S.soft),grand=task(S.grand),p=prog(S.tasks);
+  var wk=Math.max(1,Math.floor((T-dn('2026-09-28'))/7)+1);
+  function cd(t,label){if(!t)return'';var d=dn(t.s)-T;
+    return '<div class="stat"><span>'+label+'</span><b>'+(d>0?days(d):d===0?'Сегодня':'Открыто')+'</b><em>'+fd(t.s,1)+'</em></div>'}
+  var late=S.tasks.filter(function(t){return st(t)==='late'}).length;
+  return '<header class="band"><div class="band-row"><div class="mark">PECÀN<small>coffee &amp; bakery</small></div>'+
+    '<div><h1>План открытия кофейни-пекарни · Астана, пр. Тұран, 52/4</h1><p>Обновлено '+fd(S.updated,1)+' · ведёт Gastro Ultima</p></div></div></header>'+
+    '<div class="wrap"><div class="stats">'+cd(soft,'До технического открытия')+cd(grand,'До торжественного открытия')+
+    '<div class="stat"><span>Готовность плана</span><b>'+p+'%</b><div class="meter"><i style="width:'+p+'%"></i></div></div>'+
+    '<div class="stat"><span>Идёт</span><b>'+wk+'-я неделя</b><em>'+(late?'<span style="color:var(--late)">'+late+' '+plural(late,'задача','задачи','задач')+' с просрочкой</span>':'просрочек нет')+'</em></div></div>'}
+
+function brief(){
+  function row(t,when){return '<button class="item" data-open="'+t.i+'"><span class="when">'+when+'</span><span class="t">'+esc(t.n)+tags(t)+'<br><span class="chip" style="--rc:var(--r-'+t.r+')">'+esc(role(t.r).n)+'</span></span></button>'}
+  var cur=S.tasks.filter(function(t){var s=st(t);return s==='now'||s==='late'}).sort(function(a,b){return dn(a.e)-dn(b.e)});
+  var next=S.tasks.filter(function(t){return st(t)==='plan'&&dn(t.s)<=T+14}).sort(function(a,b){return dn(a.s)-dn(b.s)});
+  return '<div class="duo"><section><h2>Сейчас в работе</h2><div class="list">'+
+    (cur.length?cur.map(function(t){return row(t,'до '+fd(t.e))}).join(''):'<div class="empty">Активных задач нет.</div>')+'</div></section>'+
+    '<section><h2>Начнётся в ближайшие 14 дней</h2><div class="list">'+
+    (next.length?next.map(function(t){return row(t,'с '+fd(t.s))}).join(''):'<div class="empty">На две недели вперёд новых задач нет.</div>')+'</div></section></div>'}
+
+function tabs(){
+  var t=[['gantt','График'],['milestones','Вехи'],['roles','Роли']];
+  return '<div class="tabs" role="tablist">'+t.map(function(x){return '<button role="tab" data-tab="'+x[0]+'" aria-selected="'+(F.tab===x[0])+'">'+x[1]+'</button>'}).join('')+'</div>'}
+
+function tools(){
+  var any=Object.keys(F.roles).length;
+  var o='<div class="tools">'+S.roles.map(function(r){return '<button class="pill role'+(any&&!F.roles[r.k]?' off':'')+'" style="--rc:var(--r-'+r.k+')" data-role="'+r.k+'" aria-pressed="'+!!F.roles[r.k]+'">'+esc(r.n)+'</button>'}).join('')+'</div>';
+  var modes=[['all','Все задачи'],['open','Незавершённые'],['now','В работе и просроченные'],['14','Ближайшие 14 дней'],['late','Только просроченные'],['ms','Только вехи'],['crit','Критический путь']];
+  o+='<div class="tools"><select id="mode" aria-label="Показать">'+modes.map(function(m){return '<option value="'+m[0]+'"'+(F.mode===m[0]?' selected':'')+'>'+m[1]+'</option>'}).join('')+'</select>'+
+    '<select id="zoom" aria-label="Масштаб">'+[[5,'Масштаб: весь проект'],[9,'Масштаб: недели'],[20,'Масштаб: дни']].map(function(m){return '<option value="'+m[0]+'"'+(F.zoom===m[0]?' selected':'')+'>'+m[1]+'</option>'}).join('')+'</select>'+
+    '<button class="pill" data-act="today">К сегодняшнему дню</button><span class="spacer"></span>'+
+    (canEdit?'<button class="btn" data-act="add">Добавить задачу</button>':'')+'</div>';
+  return o}
+
+function gantt(){
+  var r0=dn(S.range[0]),r1=dn(S.range[1]),dw=F.zoom,W=(r1-r0+1)*dw;
+  function x(s){return (dn(s)-r0)*dw}
+  var sc='',d,m=-1;
+  for(d=r0;d<=r1;d++){var D=new Date(d*864e5),mm=D.getUTCMonth();
+    if(mm!==m){m=mm;var nx=Date.UTC(D.getUTCFullYear(),mm+1,1)/864e5;var w=(Math.min(nx,r1+1)-d)*dw;
+      sc+='<div class="mo" style="left:'+(d-r0)*dw+'px;width:'+w+'px">'+(w>70?MONF[mm]+' '+D.getUTCFullYear():MON[mm])+'</div>'}
+    if(D.getUTCDay()===1)sc+='<div class="wk" style="left:'+(d-r0)*dw+'px;width:'+7*dw+'px">'+D.getUTCDate()+'</div>'}
+  var ov='';
+  var mk=S.marks.slice().sort(function(a,b){return dn(a.s)-dn(b.s)});
+  mk.forEach(function(k,i){var l=x(k.s),w=(dn(k.e)-dn(k.s)+1)*dw,nx=i+1<mk.length?x(mk[i+1].s):W;
+    sc+='<div class="ev" title="'+esc(k.n)+'" style="left:'+l+'px;max-width:'+Math.max(w,nx-l-4)+'px">'+esc(k.n)+'</div>';
+    ov+='<div class="band2" style="left:'+l+'px;width:'+w+'px"></div>'});
+  if(T>=r0&&T<=r1){sc+='<div class="now" style="left:'+((T-r0)*dw)+'px">сегодня</div>';ov+='<div class="today" style="left:'+((T-r0)*dw+dw/2-1)+'px"></div>'}
+  var rows='',shown=0;
+  S.phases.forEach(function(p){
+    var all=S.tasks.filter(function(t){return t.p===p.k}),list=all.filter(visible);
+    if(!list.length)return;shown+=list.length;
+    var a=Math.min.apply(0,all.map(function(t){return dn(t.s)})),b=Math.max.apply(0,all.map(function(t){return dn(t.e)})),pg=prog(all);
+    rows+='<div class="grow phase"><button class="gname" data-phase="'+p.k+'" aria-expanded="'+!F.closed[p.k]+'"><span class="n">'+(F.closed[p.k]?'▸ ':'▾ ')+esc(p.n)+'</span><span class="pc">'+fd(iso(a))+' – '+fd(iso(b))+' · '+pg+'%</span></button>'+
+      '<div class="gtrack" style="width:'+W+'px;--ww:'+7*dw+'px"><div class="pbar" style="left:'+(a-r0)*dw+'px;width:'+(b-a+1)*dw+'px"><i style="width:'+pg+'%"></i></div></div></div>';
+    if(F.closed[p.k])return;
+    list.sort(function(u,v){return dn(u.s)-dn(v.s)||dn(u.e)-dn(v.e)}).forEach(function(t){
+      var s=st(t),l=x(t.s),w=(dn(t.e)-dn(t.s)+1)*dw,bar,lx;
+      if(t.m){bar='<button class="ms'+(t.g>=100?'':' open')+'" data-open="'+t.i+'" aria-label="'+esc(t.n)+'" style="left:'+(l+dw/2)+'px;--rc:'+(s==='late'?'var(--late)':'var(--r-'+t.r+')')+'"></button>';lx=l+dw/2+14}
+      else{bar='<button class="bar'+(s==='late'?' late':'')+'" data-open="'+t.i+'" aria-label="'+esc(t.n)+'" style="left:'+l+'px;width:'+w+'px;--rc:var(--r-'+t.r+')"><i style="width:'+t.g+'%"></i></button>';lx=l+w+7}
+      rows+='<div class="grow"><button class="gname" data-open="'+t.i+'"><span class="n'+(s==='done'?' done':'')+'">'+esc(t.n)+tags(t)+'</span><span class="chip" style="--rc:var(--r-'+t.r+')">'+esc(role(t.r).n)+'</span></button>'+
+        '<div class="gtrack" style="width:'+W+'px;--ww:'+7*dw+'px">'+bar+'<span class="lbl" style="left:'+lx+'px">'+fr(t)+(t.g>0&&t.g<100?' · '+t.g+'%':'')+'</span></div></div>'})});
+  if(!shown)rows='<div class="empty" style="padding:24px 16px">Под этот фильтр задач нет. Сбросьте фильтр по ролям или выберите «Все задачи».</div>';
+  return tools()+'<div class="gwrap" id="gw"><div class="ginner"><div class="ghead"><div class="corner">Работа · ответственный</div><div class="scale" style="width:'+W+'px">'+sc+'</div></div>'+
+    '<div class="gover" style="left:var(--nw);width:'+W+'px">'+ov+'</div>'+rows+'</div></div>'+
+    '<p class="chip" style="--rc:transparent;white-space:normal">Полоса закрашена на долю выполнения. Ромб обозначает веху, пустой ромб ещё не пройден. Нажмите на строку, чтобы открыть детали.</p>'}
+
+function milestones(){
+  var ms=S.tasks.filter(function(t){return t.m}).sort(function(a,b){return dn(a.s)-dn(b.s)});
+  return '<div class="scroll"><table class="mtable"><thead><tr><th>Дата</th><th>Веха</th><th>Ответственный</th><th>Статус</th></tr></thead><tbody>'+
+    ms.map(function(t){var s=st(t);return '<tr class="'+(s==='done'?'past':'')+'"><td>'+fd(t.s,1)+'</td><td><button class="item" style="display:inline;border:0;padding:0" data-open="'+t.i+'"><span class="t">'+esc(t.n)+'</span></button>'+(t.c?'<span class="tag crit">критический путь</span>':'')+'</td><td><span class="chip" style="--rc:var(--r-'+t.r+')">'+esc(role(t.r).n)+'</span></td><td>'+(s==='late'?'<span style="color:var(--late)">Просрочено</span>':s==='done'?'<span style="color:var(--ok)">Пройдена</span>':dn(t.s)===T?'Сегодня':'через '+days(dn(t.s)-T))+'</td></tr>'}).join('')+
+    '</tbody></table></div><section><h2>На чём держится график</h2><ul class="notes">'+S.notes.map(function(n){return '<li>'+esc(n)+'</li>'}).join('')+'</ul></section>'}
+
+function roles(){
+  return '<div class="cards">'+S.roles.map(function(r){
+    var mine=S.tasks.filter(function(t){return t.r===r.k}),open=mine.filter(function(t){return st(t)!=='done'}).sort(function(a,b){return dn(a.s)-dn(b.s)});
+    return '<article class="card" style="--rc:var(--r-'+r.k+')"><div><h3>'+esc(r.n)+'</h3><div class="who">'+esc(r.who)+'</div></div><ul>'+r.duties.map(function(d){return '<li>'+esc(d)+'</li>'}).join('')+'</ul>'+
+      '<div class="num">'+mine.length+' '+plural(mine.length,'задача','задачи','задач')+' в плане, выполнено '+(mine.length-open.length)+'</div>'+
+      (open.length?'<div class="list">'+open.slice(0,3).map(function(t){return '<button class="item" data-open="'+t.i+'"><span class="when">'+fr(t)+'</span><span class="t">'+esc(t.n)+tags(t)+'</span></button>'}).join('')+'</div>':'')+
+      '<button class="btn ghost" data-only="'+r.k+'">Показать на графике</button></article>'}).join('')+'</div>'}
+
+function render(){
+  var gw=document.getElementById('gw'),sl=gw?gw.scrollLeft:null,stp=gw?gw.scrollTop:0,wy=window.scrollY;
+  app.innerHTML=head()+brief()+tabs()+(F.tab==='gantt'?gantt():F.tab==='roles'?roles():milestones())+
+    (window.claude?'':'<p class="dl">Скачать план: <a href="pecan-plan.pdf">PDF для печати</a> · <a href="pecan-plan.xlsx">таблица Excel</a></p>')+'</div>'+
+    (dirty?'<div class="savebar"><span>Есть несохранённые изменения</span><button class="btn" data-act="save"'+(busy?' disabled':'')+'>'+(busy?'Сохраняю…':'Сохранить для всех')+'</button><button class="btn ghost" data-act="revert">Отменить</button></div>':'');
+  gw=document.getElementById('gw');
+  if(gw){if(sl===null||firstScroll){gw.scrollLeft=Math.max(0,(T-dn(S.range[0]))*F.zoom-60);firstScroll=false}else{gw.scrollLeft=sl;gw.scrollTop=stp}}
+  window.scrollTo(0,wy)}
+
+function toast(msg){var t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');document.body.appendChild(t)}
+  t.textContent=msg;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){t.hidden=true},6000)}
+
+/* ---------- task dialog ---------- */
+var dlg=document.createElement('dialog');document.body.appendChild(dlg);
+function openTask(id){
+  var t=id?task(id):null,isNew=!t;
+  if(isNew)t={i:'',p:S.phases[0].k,n:'',r:'gu',s:TODAY,e:iso(T+6),g:0};
+  if(!canEdit){
+    var s=st(t);
+    dlg.innerHTML='<div class="dlg"><h3>'+esc(t.n)+'</h3><dl><dt>Срок</dt><dd>'+(t.s===t.e?fd(t.s,1):fd(t.s,1)+' – '+fd(t.e,1)+' · '+days(dn(t.e)-dn(t.s)+1))+'</dd>'+
+      '<dt>Ответственный</dt><dd><span class="chip" style="--rc:var(--r-'+t.r+')">'+esc(role(t.r).n)+'</span></dd>'+
+      (t.w?'<dt>Участвуют</dt><dd>'+esc(t.w)+'</dd>':'')+
+      '<dt>Статус</dt><dd>'+STN[s]+(t.m?'':' · '+t.g+'%')+(t.c?' · критический путь':'')+'</dd>'+
+      (t.d?'<dt>Детали</dt><dd>'+esc(t.d)+'</dd>':'')+'</dl><div class="acts"><button class="btn" data-dlg="close">Закрыть</button></div></div>';
+    dlg.showModal();return}
+  dlg.innerHTML='<form class="dlg" id="tf" method="dialog"><h3>'+(isNew?'Новая задача':'Задача')+'</h3>'+
+    '<label>Название<input id="f-n" required maxlength="140" value="'+esc(t.n)+'"></label>'+
+    '<div class="two"><label>Этап<select id="f-p">'+S.phases.map(function(p){return '<option value="'+p.k+'"'+(p.k===t.p?' selected':'')+'>'+esc(p.n)+'</option>'}).join('')+'</select></label>'+
+    '<label>Ответственный<select id="f-r">'+S.roles.map(function(r){return '<option value="'+r.k+'"'+(r.k===t.r?' selected':'')+'>'+esc(r.n)+'</option>'}).join('')+'</select></label></div>'+
+    '<div class="two"><label>Начало<input type="date" id="f-s" required value="'+t.s+'"></label><label>Окончание<input type="date" id="f-e" required value="'+t.e+'"></label></div>'+
+    '<div class="shift">Сдвинуть: <button type="button" data-shift="-7">−7 дн.</button><button type="button" data-shift="-1">−1</button><button type="button" data-shift="1">+1</button><button type="button" data-shift="7">+7 дн.</button></div>'+
+    '<label>Выполнено: <span id="f-gv">'+t.g+'%</span><input type="range" id="f-g" min="0" max="100" step="10" value="'+t.g+'"></label>'+
+    '<div class="checks"><label><input type="checkbox" id="f-m"'+(t.m?' checked':'')+'>Веха (одна дата)</label><label><input type="checkbox" id="f-c"'+(t.c?' checked':'')+'>Критический путь</label><label><input type="checkbox" id="f-x"'+(t.x?' checked':'')+'>Под риском</label></div>'+
+    '<label>Кто ещё участвует<input id="f-w" maxlength="140" value="'+esc(t.w||'')+'"></label>'+
+    '<label>Детали и результат<textarea id="f-d" rows="3" maxlength="600">'+esc(t.d||'')+'</textarea></label>'+
+    '<div class="acts">'+(isNew?'':'<button type="button" class="btn danger" data-dlg="del">Удалить</button>')+'<span class="spacer"></span><button type="button" class="btn ghost" data-dlg="close">Отмена</button><button class="btn" type="submit">Применить</button></div></form>';
+  dlg.dataset.id=t.i;dlg.showModal()}
+function gid(i){return document.getElementById(i)}
+dlg.addEventListener('input',function(e){if(e.target.id==='f-g')gid('f-gv').textContent=e.target.value+'%'});
+dlg.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(e.target===dlg){dlg.close();return}if(!b)return;
+  if(b.dataset.shift){var n=+b.dataset.shift;['f-s','f-e'].forEach(function(k){var el=gid(k);if(el.value)el.value=iso(dn(el.value)+n)});return}
+  if(b.dataset.dlg==='close'){dlg.close();return}
+  if(b.dataset.dlg==='del'){
+    if(b.dataset.sure){S.tasks=S.tasks.filter(function(t){return t.i!==dlg.dataset.id});dirty=true;dlg.close();render()}
+    else{b.dataset.sure='1';b.textContent='Точно удалить?'}}});
+dlg.addEventListener('submit',function(e){
+  if(e.target.id!=='tf')return;e.preventDefault();
+  var id=dlg.dataset.id,t=id?task(id):null;
+  if(!t){t={i:'t'+Date.now().toString(36)};S.tasks.push(t)}
+  t.n=gid('f-n').value.trim();t.p=gid('f-p').value;t.r=gid('f-r').value;
+  t.s=gid('f-s').value;t.e=gid('f-e').value;
+  if(gid('f-m').checked){t.m=1;t.e=t.s}else delete t.m;
+  if(dn(t.e)<dn(t.s))t.e=t.s;
+  t.g=+gid('f-g').value;
+  if(gid('f-c').checked)t.c=1;else delete t.c;
+  if(gid('f-x').checked)t.x=1;else delete t.x;
+  var w=gid('f-w').value.trim(),d=gid('f-d').value.trim();
+  if(w)t.w=w;else delete t.w; if(d)t.d=d;else delete t.d;
+  if(dn(t.s)<dn(S.range[0]))S.range[0]=iso(dn(t.s)-((new Date(dn(t.s)*864e5).getUTCDay()+6)%7));
+  if(dn(t.e)>dn(S.range[1])-7)S.range[1]=iso(dn(t.e)+14);
+  dirty=true;dlg.close();render()});
+
+/* ---------- saving: the page republishes itself with the new plan ---------- */
+function buildDoc(){
+  var L='<',css=gid('css').textContent,js=gid('js').textContent;
+  var data=JSON.stringify(S).replace(/</g,'\\u003c');
+  return L+'!doctype html>'+L+'html>'+L+'head>'+L+'meta charset=utf8>'+L+'meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover">'+L+'style>'+
+    ':root{color-scheme:light;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;background:#fafafa}img{max-width:100%}[hidden]{display:none!important}'+
+    L+'/style>'+L+'/head>'+L+'body>'+
+    L+'title>План открытия PECÀN'+L+'/title>\n'+
+    L+'link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&family=Lobster&display=swap">\n'+
+    L+'style id="css">'+css+L+'/style>\n'+L+'div id="app">'+L+'/div>\n'+
+    L+'script type="application/json" id="plan">'+data+L+'/script>\n'+
+    L+'script id="js">'+js+L+'/script>\n'+L+'/body>'+L+'/html>'}
+function revert(){S=JSON.parse(RAW);dirty=false;render()}
+function save(){
+  if(!art||busy)return;busy=true;S.updated=TODAY;render();
+  art.publish(buildDoc()).then(function(){busy=false;dirty=false;toast('Сохранено. План обновится у всех.');render()},function(err){
+    busy=false;var c=err&&err.code;
+    if(c==='conflict')toast('Кто-то сохранил план раньше вас. Страница обновится, внесите правку ещё раз.');
+    else if(c==='rate_limited'){toast('Слишком частые сохранения. Подождите минуту и сохраните снова.');render()}
+    else if(c==='too_large'||c==='invalid_content'||c==='transform_error'){toast('План не сохранился: слишком большой объём текста. Сократите описания.');render()}
+    else if(c&&c!=='upstream_error'){canEdit=false;art=null;toast('У вас доступ только для просмотра. Изменения вносит команда Gastro Ultima.');revert()}
+    else{toast('Не удалось сохранить. Проверьте соединение и попробуйте ещё раз.');render()}})}
+
+app.addEventListener('click',function(e){
+  var b=e.target.closest('button');if(!b)return;var d=b.dataset;
+  if(d.open){openTask(d.open);return}
+  if(d.tab){F.tab=d.tab;firstScroll=true;try{history.replaceState(null,'','#'+d.tab)}catch(x){}render();return}
+  if(d.role){if(F.roles[d.role])delete F.roles[d.role];else F.roles[d.role]=1;render();return}
+  if(d.only){F.roles={};F.roles[d.only]=1;F.mode='all';F.tab='gantt';firstScroll=true;render();return}
+  if(d.phase){if(F.closed[d.phase])delete F.closed[d.phase];else F.closed[d.phase]=1;render();return}
+  if(d.act==='today'){firstScroll=true;render();return}
+  if(d.act==='add'){openTask(null);return}
+  if(d.act==='save'){save();return}
+  if(d.act==='revert'){revert();return}});
+app.addEventListener('change',function(e){
+  if(e.target.id==='mode'){F.mode=e.target.value;render()}
+  if(e.target.id==='zoom'){F.zoom=+e.target.value;firstScroll=true;try{localStorage.setItem('pecan-zoom',F.zoom)}catch(x){}render()}});
+
+render();
+if(window.claude&&window.claude.use)window.claude.use('artifact').then(function(a){if(a){art=a;canEdit=true;render()}},function(){});
+})();
+</script>
+
+</body></html>
