@@ -97,6 +97,7 @@ h2{font:400 13px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;col
 .card{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--rc);border-radius:12px;padding:16px;min-width:0;display:flex;flex-direction:column;gap:10px}
 .card h3{margin:0;font:300 19px/1.15 var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
 .card .who{font-size:13px;color:var(--muted)}
+.card .item{grid-template-columns:116px 1fr}
 .card ul{margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:4px}
 .card .num{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
 .mtable{width:100%;border-collapse:collapse;font-size:14px}
@@ -126,7 +127,41 @@ dialog::backdrop{background:rgba(40,8,16,.55)}
 .savebar .btn{background:var(--cream);color:#5C1826}
 .savebar .btn.ghost{background:none;color:var(--cream);border-color:var(--cream)}
 .toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);z-index:30;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;max-width:min(520px,calc(100% - 32px));font-size:14px}
-@media (max-width:640px){:root{--nw:150px}.logo{height:46px}.gname .chip{display:none}.gname{padding:6px 8px}.gname .n{font-size:13px}.item{grid-template-columns:78px 1fr}.dlg .two{grid-template-columns:1fr}}
+.more{background:none;border:0;padding:10px 0;color:var(--accent);font-weight:500;text-align:left}
+/* Phone: task name sits on its own line above the bar, so the timeline gets the full screen width. */
+@media (max-width:640px){
+  :root{--nw:0px}
+  .band{padding-block:16px 14px}.logo{height:44px}.band h1{font-size:14px}.band p{font-size:12px}
+  .wrap{gap:16px;padding-block:14px 90px}
+  .stats{grid-template-columns:1fr 1fr}.stat{padding:10px 12px}.stat b{font-size:21px}.stat span{font-size:10.5px;margin-bottom:4px}
+  .item{grid-template-columns:74px 1fr}
+  .tabs button{flex:1;padding:12px 6px;font-size:15px}
+  .tools.roles{flex-wrap:nowrap;overflow-x:auto;margin-inline:-16px;padding-inline:16px;scrollbar-width:none}
+  .tools.roles::-webkit-scrollbar{display:none}
+  .pill{flex:none;padding:9px 13px}
+  .tools select{flex:1 1 40%;min-width:0;font-size:16px;padding:9px 12px}
+  .tools .spacer{display:none}.tools .btn{flex:1 1 100%;padding:11px 16px}
+  .gwrap{max-height:82vh;max-height:82dvh;border-radius:10px}
+  .corner{display:none}
+  .grow{flex-direction:column;min-height:0}
+  .gname{align-self:flex-start;width:calc(100vw - 40px);border-right:0;background:transparent;padding:8px 10px 0;flex-direction:row;flex-wrap:wrap;justify-content:flex-start;align-items:baseline;gap:1px 8px}
+  .gname .n,.gname .chip,.gname .pc{background:var(--surface);box-shadow:0 0 0 3px var(--surface);border-radius:2px}
+  .phase .gname .n,.phase .gname .pc{background:var(--tint);box-shadow:0 0 0 3px var(--tint)}
+  .phase .gname{justify-content:space-between}
+  .card .item{grid-template-columns:1fr;gap:2px}
+  .gname .n{font-size:13.5px}
+  .grow:hover .gname,.grow:hover .gtrack{background-color:transparent}
+  .gtrack{height:30px}
+  .grow.phase{background:var(--tint)}.phase .gname{background:transparent;padding:8px 10px 0}.phase .gtrack{height:14px;background-color:transparent}
+  .grow.phase:hover .gname,.grow.phase:hover .gtrack{background-color:transparent}
+  .bar{height:18px;margin-top:-9px}
+  .mtable thead{display:none}
+  .mtable tr{display:flex;flex-wrap:wrap;gap:3px 12px;padding:10px 12px;border-bottom:1px solid var(--line)}
+  .mtable td{padding:0;border:0}
+  .mtable td:nth-child(2){order:-1;flex-basis:100%;font-weight:500}
+  .dlg{padding:16px}.dlg .two{grid-template-columns:1fr}.dlg input,.dlg select,.dlg textarea{font-size:16px}
+  .dlg .acts .btn{flex:1}
+}
 @media (prefers-reduced-motion:no-preference){.bar i,.meter i{transition:width .3s}}
 </style>
 <div id="app"></div>
@@ -232,7 +267,9 @@ var RAW=document.getElementById('plan').textContent;
 var S=JSON.parse(RAW);
 var app=document.getElementById('app');
 var art=null,canEdit=false,dirty=false,busy=false,toastT=null,firstScroll=true;
-var F={roles:{},mode:'all',closed:{},zoom:9,tab:'gantt'};
+var F={roles:{},mode:'all',closed:{},more:{},zoom:9,tab:'gantt'};
+var MQ=window.matchMedia?window.matchMedia('(max-width:640px)'):{matches:false};
+if(MQ.matches)F.zoom=5;
 try{var z=+localStorage.getItem('pecan-zoom');if(z)F.zoom=z}catch(e){}
 var h=(location.hash||'').slice(1);if(h==='roles'||h==='milestones'||h==='gantt')F.tab=h;
 
@@ -279,14 +316,16 @@ function head(){
     '<div class="stat"><span>Готовность плана</span><b>'+p+'%</b><div class="meter"><i style="width:'+p+'%"></i></div></div>'+
     '<div class="stat"><span>Идёт</span><b>'+wk+'-я неделя</b><em>'+(late?'<span style="color:var(--late)">'+late+' '+plural(late,'задача','задачи','задач')+' с просрочкой</span>':'просрочек нет')+'</em></div></div>'}
 
+function cut(l,k){var n=MQ.matches?3:8;return F.more[k]?l:l.slice(0,n)}
+function more(l,k){var n=MQ.matches?3:8;return l.length>n?'<button class="more" data-more="'+k+'">'+(F.more[k]?'Свернуть':'Показать все ('+l.length+')')+'</button>':''}
 function brief(){
   function row(t,when){return '<button class="item" data-open="'+t.i+'"><span class="when">'+when+'</span><span class="t">'+esc(t.n)+tags(t)+'<br><span class="chip" style="--rc:var(--r-'+t.r+')">'+esc(role(t.r).n)+'</span></span></button>'}
   var cur=S.tasks.filter(function(t){var s=st(t);return s==='now'||s==='late'}).sort(function(a,b){return dn(a.e)-dn(b.e)});
   var next=S.tasks.filter(function(t){return st(t)==='plan'&&dn(t.s)<=T+14}).sort(function(a,b){return dn(a.s)-dn(b.s)});
   return '<div class="duo"><section><h2>Сейчас в работе</h2><div class="list">'+
-    (cur.length?cur.map(function(t){return row(t,'до '+fd(t.e))}).join(''):'<div class="empty">Активных задач нет.</div>')+'</div></section>'+
+    (cur.length?cut(cur,'cur').map(function(t){return row(t,'до '+fd(t.e))}).join('')+more(cur,'cur'):'<div class="empty">Активных задач нет.</div>')+'</div></section>'+
     '<section><h2>Начнётся в ближайшие 14 дней</h2><div class="list">'+
-    (next.length?next.map(function(t){return row(t,'с '+fd(t.s))}).join(''):'<div class="empty">На две недели вперёд новых задач нет.</div>')+'</div></section></div>'}
+    (next.length?cut(next,'next').map(function(t){return row(t,'с '+fd(t.s))}).join('')+more(next,'next'):'<div class="empty">На две недели вперёд новых задач нет.</div>')+'</div></section></div>'}
 
 function tabs(){
   var t=[['gantt','График'],['milestones','Вехи'],['roles','Роли']];
@@ -294,10 +333,10 @@ function tabs(){
 
 function tools(){
   var any=Object.keys(F.roles).length;
-  var o='<div class="tools">'+S.roles.map(function(r){return '<button class="pill role'+(any&&!F.roles[r.k]?' off':'')+'" style="--rc:var(--r-'+r.k+')" data-role="'+r.k+'" aria-pressed="'+!!F.roles[r.k]+'">'+esc(r.n)+'</button>'}).join('')+'</div>';
+  var o='<div class="tools roles">'+S.roles.map(function(r){return '<button class="pill role'+(any&&!F.roles[r.k]?' off':'')+'" style="--rc:var(--r-'+r.k+')" data-role="'+r.k+'" aria-pressed="'+!!F.roles[r.k]+'">'+esc(r.n)+'</button>'}).join('')+'</div>';
   var modes=[['all','Все задачи'],['open','Незавершённые'],['now','В работе и просроченные'],['14','Ближайшие 14 дней'],['late','Только просроченные'],['ms','Только вехи'],['crit','Критический путь']];
   o+='<div class="tools"><select id="mode" aria-label="Показать">'+modes.map(function(m){return '<option value="'+m[0]+'"'+(F.mode===m[0]?' selected':'')+'>'+m[1]+'</option>'}).join('')+'</select>'+
-    '<select id="zoom" aria-label="Масштаб">'+[[5,'Масштаб: весь проект'],[9,'Масштаб: недели'],[20,'Масштаб: дни']].map(function(m){return '<option value="'+m[0]+'"'+(F.zoom===m[0]?' selected':'')+'>'+m[1]+'</option>'}).join('')+'</select>'+
+    '<select id="zoom" aria-label="Масштаб">'+[[5,'Весь проект'],[9,'По неделям'],[20,'По дням']].map(function(m){return '<option value="'+m[0]+'"'+(F.zoom===m[0]?' selected':'')+'>'+m[1]+'</option>'}).join('')+'</select>'+
     '<button class="pill" data-act="today">К сегодняшнему дню</button><span class="spacer"></span>'+
     (canEdit?'<button class="btn" data-act="add">Добавить задачу</button>':'')+'</div>';
   return o}
@@ -355,7 +394,7 @@ function render(){
     (window.claude?'':'<p class="dl">Скачать план: <a href="pecan-plan.pdf">PDF для печати</a> · <a href="pecan-plan.xlsx">таблица Excel</a></p>')+'</div>'+
     (dirty?'<div class="savebar"><span>Есть несохранённые изменения</span><button class="btn" data-act="save"'+(busy?' disabled':'')+'>'+(busy?'Сохраняю…':'Сохранить для всех')+'</button><button class="btn ghost" data-act="revert">Отменить</button></div>':'');
   gw=document.getElementById('gw');
-  if(gw){if(sl===null||firstScroll){gw.scrollLeft=Math.max(0,(T-dn(S.range[0]))*F.zoom-60);firstScroll=false}else{gw.scrollLeft=sl;gw.scrollTop=stp}}
+  if(gw){if(sl===null||firstScroll){gw.scrollLeft=Math.max(0,(T-dn(S.range[0]))*F.zoom-(MQ.matches?75:60));firstScroll=false}else{gw.scrollLeft=sl;gw.scrollTop=stp}}
   window.scrollTo(0,wy)}
 
 function toast(msg){var t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');document.body.appendChild(t)}
@@ -442,6 +481,7 @@ app.addEventListener('click',function(e){
   if(d.role){if(F.roles[d.role])delete F.roles[d.role];else F.roles[d.role]=1;render();return}
   if(d.only){F.roles={};F.roles[d.only]=1;F.mode='all';F.tab='gantt';firstScroll=true;render();return}
   if(d.phase){if(F.closed[d.phase])delete F.closed[d.phase];else F.closed[d.phase]=1;render();return}
+  if(d.more){F.more[d.more]=!F.more[d.more];render();return}
   if(d.act==='today'){firstScroll=true;render();return}
   if(d.act==='add'){openTask(null);return}
   if(d.act==='save'){save();return}
@@ -451,6 +491,7 @@ app.addEventListener('change',function(e){
   if(e.target.id==='zoom'){F.zoom=+e.target.value;firstScroll=true;try{localStorage.setItem('pecan-zoom',F.zoom)}catch(x){}render()}});
 
 render();
+if(MQ.addEventListener)MQ.addEventListener('change',function(){firstScroll=true;render()});
 if(window.claude&&window.claude.use)window.claude.use('artifact').then(function(a){if(a){art=a;canEdit=true;render()}},function(){});
 })();
 </script>
